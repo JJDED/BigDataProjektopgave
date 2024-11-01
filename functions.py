@@ -32,7 +32,7 @@ def loadFunc(energy_df,year):
     return filename
 
 def transformFunc(filename):
-    print('Transform data...')
+    print('Transforming data...')
     df = pd.read_csv(filename)
 
     totalPowerLt100MW = df[df["ProductionLt100MW"] != 0]["ProductionLt100MW"].sum()
@@ -46,10 +46,6 @@ def transformFunc(filename):
     totalSolarPower = df[df["SolarPower"]!= 0]["SolarPower"].sum()
 
     totalPowerGenerated = totalPowerLt100MW + totalPowerGe100MW + totalOffshoreWind + totalOnshoreWind + totalSolarPower
-
-    exportGreatBeltDK1 = df[df['PriceArea'] == 'DK1']["ExchangeGreatBelt"].sum()
-    exportGreatBeltDK2 = df[df['PriceArea'] == 'DK2']["ExchangeGreatBelt"].sum()
-    exportGreatBeltTotal = exportGreatBeltDK1 + exportGreatBeltDK2
 
     exportGermanyDK1 = df[df['PriceArea'] == 'DK1']["ExchangeGermany"].sum()
     exportGermanyDK2 = df[df['PriceArea'] == 'DK2']["ExchangeGermany"].sum()
@@ -74,6 +70,8 @@ def transformFunc(filename):
     totalPowerExported = exportGermanyTotal + exportGreatBritainTotal + exportNetherlandsTotal + exportNorwayTotal + exportSwedenTotal
     totalPowerRemaining = totalPowerGenerated - totalPowerExported
 
+    print('Data transformed...')
+
     return {
         "Solar power generated (MW)": totalSolarPower,
         "Wind power generated (MW)": totalWindPower,
@@ -82,10 +80,6 @@ def transformFunc(filename):
         "Total power exported (MW)": totalPowerExported,
         
         "Power remaining after export (MW)": totalPowerRemaining,
-        
-        #"Net Export through Great Belt from DK1 (MW)": exportGreatBeltDK1,
-        #"Net Export through Great Belt from DK2 (MW)": exportGreatBeltDK2,
-        #"Total Net Export through Great Belt": exportGreatBeltTotal,
 
         "Net Export to Germany from DK1 (MW)": exportGermanyDK1,
         "Net Export to Germany from DK2 (MW)": exportGermanyDK2,
@@ -110,6 +104,7 @@ def transformFunc(filename):
     }
 
 def loadExportData(year,result):
+
     dataFilepath = 'Data'
     
     df_result = pd.DataFrame(list(result.items()), columns=['Description', 'Value'])
@@ -144,6 +139,8 @@ def loadExportData(year,result):
     plt.savefig(powerPieChart, format='png', dpi=300)
     plt.show()
 
+    print('Pie chart generated and stored in Data folder...')
+
     exports = [
         result.get("Total Net Export to Germany (MW)", 0),
         result.get("Total Net Export to the Netherlands (MW)", 0),
@@ -171,6 +168,7 @@ def loadExportData(year,result):
     plt.savefig(exportBarChart, format='png', dpi=300)
     plt.show()
 
+    print('Bar chart generated and stored in Data folder...')
 
 def runData():
     # Extract
