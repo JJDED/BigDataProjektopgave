@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-import seaborn as sns
+import os
 import matplotlib.pyplot as plt
 
 def extractFunc(year):
@@ -17,10 +17,17 @@ def extractFunc(year):
     return pd.DataFrame(records)
     
 def loadFunc(energy_df,year):
-    print('Load data to csv...')
-    filename = f'energi_{year}.csv'
+    print('Loading data to csv...')
+
+    output_dir = 'Data'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    filename = os.path.join(output_dir, f'energi_{year}.csv')
+    
     print(f'energi_{year}.csv')
     energy_df.to_csv(filename, index=False)
+
     print('Data loaded to csv...')
     return filename
 
