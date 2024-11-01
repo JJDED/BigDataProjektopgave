@@ -113,6 +113,24 @@ def loadExportData(year,result):
     
     print('Graphing data...')
 
+    # Pie chart to show distribution of power generated
+    totalPowerLt100MW = result.get('Power generated (MW)', 0)
+    totalPowerGe100MW = result.get('Power generated (MW)', 0)
+    totalOffshoreWind = result.get('Wind power generated (MW)', 0)
+    totalOnshoreWind = result.get('Wind power generated (MW)', 0)
+    totalSolarPower = result.get('Solar power generated (MW)', 0)
+
+    power_sources = [totalPowerLt100MW, totalPowerGe100MW, totalOffshoreWind, totalOnshoreWind, totalSolarPower]
+    power_labels = ['< 100 MW', '≥ 100 MW', 'Offshore Wind', 'Onshore Wind', 'Solar Power']
+    power_colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#ffb3e6']
+
+    plt.figure(figsize=(8, 8))
+    plt.pie(power_sources, labels=power_labels, colors=power_colors, autopct='%1.1f%%', startangle=140)
+    
+    plt.title(f'Power Sources Distribution in {year}', fontsize=14)
+    plt.savefig(f'power_sources_distribution_{year}.png', format='png', dpi=300)
+    plt.show()
+
     exports = [
         result.get("Total Net Export to Germany (MW)", 0),
         result.get("Total Net Export to the Netherlands (MW)", 0),
@@ -136,7 +154,9 @@ def loadExportData(year,result):
 
     # Display the chart
     plt.tight_layout()  # Adjust layout to prevent clipping of tick-labels
+    plt.savefig(f'export_distribution_{year}.png', format='png', dpi=300)
     plt.show()
+
 
 def runData():
     # Extract
