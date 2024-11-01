@@ -19,12 +19,12 @@ def extractFunc(year):
 def loadFunc(energy_df,year):
     print('Loading data to csv...')
 
-    output_dir = 'Data'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    dataFilepath = 'Data'
+    if not os.path.exists(dataFilepath):
+        os.makedirs(dataFilepath)
 
-    filename = os.path.join(output_dir, f'energi_{year}.csv')
-    
+    filename = os.path.join(dataFilepath, f'energi_{year}.csv')
+
     print(f'energi_{year}.csv')
     energy_df.to_csv(filename, index=False)
 
@@ -110,13 +110,17 @@ def transformFunc(filename):
     }
 
 def loadExportData(year,result):
+    dataFilepath = 'Data'
+    
     df_result = pd.DataFrame(list(result.items()), columns=['Description', 'Value'])
 
-    df_result.to_csv(f'energiExport_{year}.csv', index=False)
+    exportCSVfile = os.path.join(dataFilepath, f'energiExport_{year}.csv')
+
+    df_result.to_csv(exportCSVfile, index=False)
 
     print('Exporting Export data to CSV...')
 
-    df_result = pd.read_csv(f'energiExport_{year}.csv')
+    df_result = pd.read_csv(exportCSVfile)
     
     print('Graphing data...')
 
@@ -135,7 +139,9 @@ def loadExportData(year,result):
     plt.pie(power_sources, labels=power_labels, colors=power_colors, autopct='%1.1f%%', startangle=140)
     
     plt.title(f'Power Sources Distribution in {year}', fontsize=14)
-    plt.savefig(f'power_sources_distribution_{year}.png', format='png', dpi=300)
+
+    powerPieChart = os.path.join(dataFilepath, f'energi_distribution{year}.png')
+    plt.savefig(powerPieChart, format='png', dpi=300)
     plt.show()
 
     exports = [
@@ -156,12 +162,13 @@ def loadExportData(year,result):
 
     # Add title and labels
     plt.title(f'Export Distribution as Total Power Generated in {year}', fontsize=14)
-    plt.xlabel('Countries and Remaining Power', fontsize=12)
+    plt.xlabel('Countries', fontsize=12)
     plt.ylabel('Export Power (MW)', fontsize=12)
 
-    # Display the chart
+    # Display & save the chart
+    exportBarChart = os.path.join(dataFilepath, f'export_distribution_{year}.png')
     plt.tight_layout()  # Adjust layout to prevent clipping of tick-labels
-    plt.savefig(f'export_distribution_{year}.png', format='png', dpi=300)
+    plt.savefig(exportBarChart, format='png', dpi=300)
     plt.show()
 
 
